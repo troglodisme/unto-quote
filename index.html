@@ -15,18 +15,17 @@
         </div>
         
         <div class="content">
-            <div class="form-grid">
-                <div class="form-section">
-                    <h3>Client Information</h3>
-                    <div class="client-info">
-                        <div class="input-group">
-                            <label for="clientName">Client Name</label>
-                            <input type="text" id="clientName" placeholder="Restaurant/Business Name">
-                        </div>
-                        <div class="input-group">
-                            <label for="contactPerson">Contact Person</label>
-                            <input type="text" id="contactPerson" placeholder="Contact Name">
-                        </div>
+            <!-- Client Information Section -->
+            <div class="client-section">
+                <h2>Client Information</h2>
+                <div class="client-info">
+                    <div class="input-group">
+                        <label for="clientName">Client Name</label>
+                        <input type="text" id="clientName" placeholder="Restaurant/Business Name">
+                    </div>
+                    <div class="input-group">
+                        <label for="contactPerson">Contact Person</label>
+                        <input type="text" id="contactPerson" placeholder="Contact Name">
                     </div>
                     <div class="input-group">
                         <label for="email">Email</label>
@@ -37,6 +36,9 @@
                         <input type="date" id="quoteDate">
                     </div>
                 </div>
+            </div>
+
+            <div class="form-grid">
                 
                 <div class="form-section">
                     <h3>Small Cans (250ml)</h3>
@@ -92,6 +94,16 @@
                 <div class="form-section exclusivity-section">
                     <h3>Exclusivity Agreement</h3>
                     <div class="exclusivity-tiers">
+                        <div class="tier" data-years="0" data-discount="0">
+                            <h4>No Contract</h4>
+                            <div class="discount">0% OFF</div>
+                            <div class="features">
+                                • Standard pricing<br>
+                                • Regular delivery<br>
+                                • No commitment<br>
+                                • Flexible ordering
+                            </div>
+                        </div>
                         <div class="tier" data-years="2" data-discount="5">
                             <h4>2 Year Contract</h4>
                             <div class="discount">5% OFF</div>
