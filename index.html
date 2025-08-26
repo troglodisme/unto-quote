@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unto Toscano - Quote Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #2c2c2c;
+            background: #f8f8f8;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgb(71, 114, 88);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .logo {
+            max-width: 250px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .form-section {
+            background: #f9f9f9;
+            padding: 30px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .form-section h3 {
+            color: rgb(71, 114, 88);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-bottom: 2px solid rgb(71, 114, 88);
+            padding-bottom: 8px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            background: white;
+            color: #333;
+            font-family: inherit;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: rgb(71, 114, 88);
+        }
+        
+        .exclusivity-section {
+            grid-column: 1 / -1;
+            background: #f5f5f5;
+            border: 2px solid rgb(71, 114, 88);
+        }
+        
+        .exclusivity-tiers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .tier {
+            background: white;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid #e0e0e0;
+            transition: border-color 0.2s;
+        }
+        
+        .tier:hover {
+            border-color: rgb(71, 114, 88);
+        }
+        
+        .tier.selected {
+            border-color: rgb(255, 98, 54);
+            background: #fff8f6;
+        }
+        
+        .tier h4 {
+            color: rgb(71, 114, 88);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .tier .discount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: rgb(255, 98, 54);
+            margin: 15px 0;
+        }
+        
+        .tier .features {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .quote-preview {
+            background: #f0f8f4;
+            padding: 30px;
+            border: 1px solid rgb(71, 114, 88);
+            margin-top: 40px;
+        }
+        
+        .quote-preview h3 {
+            color: rgb(71, 114, 88);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .quote-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin: 20px 0;
+        }
+        
+        .quote-table th, .quote-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .quote-table th {
+            background: rgb(71, 114, 88);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .quote-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .total-row {
+            background: #e8f0ec !important;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .total-row td {
+            border-top: 2px solid rgb(71, 114, 88);
+        }
+        
+        .savings-row {
+            background: #fff8f6 !important;
+            color: rgb(255, 98, 54) !important;
+            font-weight: 600;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: rgb(71, 114, 88);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: rgb(61, 104, 78);
+        }
+        
+        .btn-secondary {
+            background: rgb(255, 98, 54);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgb(245, 88, 44);
+        }
+        
+        .client-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .exclusivity-tiers {
+                grid-template-columns: 1fr;
+            }
+            
+            .client-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .export-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://unto-toscano.com/cdn/shop/files/Artboard_3_4x_19f8842a-c1f2-4e49-a274-bd407461e8b8.png?v=1670781079&width=500" alt="Unto Toscano" class="logo">
+            <h1>Quote Generator</h1>
+            <p>Professional olive oil supply agreements</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-grid">
+                <div class="form-section">
+                    <h3>Client Information</h3>
+                    <div class="client-info">
+                        <div class="input-group">
+                            <label for="clientName">Client Name</label>
+                            <input type="text" id="clientName" placeholder="Restaurant/Business Name">
+                        </div>
+                        <div class="input-group">
+                            <label for="contactPerson">Contact Person</label>
+                            <input type="text" id="contactPerson" placeholder="Contact Name">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="client@email.com">
+                    </div>
+                    <div class="input-group">
+                        <label for="quoteDate">Quote Date</label>
+                        <input type="date" id="quoteDate">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Small Cans (250ml)</h3>
+                    <div class="input-group">
+                        <label for="smallCansBoxes">Boxes per Order (24 cans each)</label>
+                        <input type="number" id="smallCansBoxes" value="4" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="smallCansFrequency">Order Frequency (weeks)</label>
+                        <input type="number" id="smallCansFrequency" value="6" min="1" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="smallCansPrice">Price per Can (€)</label>
+                        <input type="number" id="smallCansPrice" value="10.00" step="0.01" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Medium Cans (500ml)</h3>
+                    <div class="input-group">
+                        <label for="mediumCansBoxes">Boxes per Order (12 cans each)</label>
+                        <input type="number" id="mediumCansBoxes" value="0" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="mediumCansFrequency">Order Frequency (weeks)</label>
+                        <input type="number" id="mediumCansFrequency" value="6" min="1" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="mediumCansPrice">Price per Can (€)</label>
+                        <input type="number" id="mediumCansPrice" value="18.00" step="0.01" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Large Containers</h3>
+                    <div class="input-group">
+                        <label for="largeContainerSize">Container Size (L)</label>
+                        <select id="largeContainerSize">
+                            <option value="5">5 Liter</option>
+                            <option value="10">10 Liter</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="largeLitersWeek">Liters per Week</label>
+                        <input type="number" id="largeLitersWeek" value="55" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="largePricePerLiter">Price per Liter (€)</label>
+                        <input type="number" id="largePricePerLiter" value="12.00" step="0.01" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-section exclusivity-section">
+                    <h3>Exclusivity Agreement</h3>
+                    <div class="exclusivity-tiers">
+                        <div class="tier" data-years="2" data-discount="5">
+                            <h4>2 Year Contract</h4>
+                            <div class="discount">5% OFF</div>
+                            <div class="features">
+                                • Basic custom labeling<br>
+                                • Priority delivery<br>
+                                • Quarterly reviews
+                            </div>
+                        </div>
+                        <div class="tier selected" data-years="3" data-discount="8">
+                            <h4>3 Year Contract</h4>
+                            <div class="discount">8% OFF</div>
+                            <div class="features">
+                                • Premium custom labels<br>
+                                • Dedicated account manager<br>
+                                • Price protection<br>
+                                • Marketing support
+                            </div>
+                        </div>
+                        <div class="tier" data-years="5" data-discount="12">
+                            <h4>5 Year Contract</h4>
+                            <div class="discount">12% OFF</div>
+                            <div class="features">
+                                • Full branding package<br>
+                                • Guaranteed price locks<br>
+                                • First access new products<br>
+                                • Co-marketing opportunities
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quote-preview">
+                <h3>Quote Preview</h3>
+                <table class="quote-table" id="quoteTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Frequency</th>
+                            <th>Monthly Total</th>
+                            <th>Annual Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="quoteBody">
+                        <!-- Table content will be generated by JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="export-buttons">
+                    <button class="btn btn-primary" onclick="generatePDF()">Export PDF</button>
+                    <button class="btn btn-secondary" onclick="updateQuote()">Update Quote</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let selectedTier = { years: 3, discount: 8 };
+        
+        // Set today's date
+        document.getElementById('quoteDate').value = new Date().toISOString().split('T')[0];
+        
+        // Handle tier selection
+        document.querySelectorAll('.tier').forEach(tier => {
+            tier.addEventListener('click', function() {
+                document.querySelectorAll('.tier').forEach(t => t.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTier = {
+                    years: parseInt(this.dataset.years),
+                    discount: parseInt(this.dataset.discount)
+                };
+                updateQuote();
+            });
+        });
+        
+        // Update quote when inputs change
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', updateQuote);
+        });
+        
+        function updateQuote() {
+            const smallCansBoxes = parseFloat(document.getElementById('smallCansBoxes').value) || 0;
+            const smallCansFrequency = parseFloat(document.getElementById('smallCansFrequency').value) || 1;
+            const smallCansPrice = parseFloat(document.getElementById('smallCansPrice').value) || 0;
+            
+            const mediumCansBoxes = parseFloat(document.getElementById('mediumCansBoxes').value) || 0;
+            const mediumCansFrequency = parseFloat(document.getElementById('mediumCansFrequency').value) || 1;
+            const mediumCansPrice = parseFloat(document.getElementById('mediumCansPrice').value) || 0;
+            
+            const largeContainerSize = parseInt(document.getElementById('largeContainerSize').value);
+            const largeLitersWeek = parseFloat(document.getElementById('largeLitersWeek').value) || 0;
+            const largePricePerLiter = parseFloat(document.getElementById('largePricePerLiter').value) || 0;
+            
+            // Calculate monthly quantities
+            const smallCansPerMonth = (smallCansBoxes * 24) * (4.33 / smallCansFrequency);
+            const mediumCansPerMonth = (mediumCansBoxes * 12) * (4.33 / mediumCansFrequency);
+            const largeLitersPerMonth = largeLitersWeek * 4.33;
+            const largeContainersPerMonth = largeLitersPerMonth / largeContainerSize;
+            
+            // Calculate base prices
+            const smallCansMonthlyBase = smallCansPerMonth * smallCansPrice;
+            const mediumCansMonthlyBase = mediumCansPerMonth * mediumCansPrice;
+            const largeLitersMonthlyBase = largeLitersPerMonth * largePricePerLiter;
+            
+            // Apply discount
+            const discountMultiplier = (100 - selectedTier.discount) / 100;
+            const smallCansMonthly = smallCansMonthlyBase * discountMultiplier;
+            const mediumCansMonthly = mediumCansMonthlyBase * discountMultiplier;
+            const largeLitersMonthly = largeLitersMonthlyBase * discountMultiplier;
+            
+            const totalMonthly = smallCansMonthly + mediumCansMonthly + largeLitersMonthly;
+            const totalAnnual = totalMonthly * 12;
+            const totalSavings = ((smallCansMonthlyBase + mediumCansMonthlyBase + largeLitersMonthlyBase) * 12) - totalAnnual;
+            
+            // Update table
+            const tbody = document.getElementById('quoteBody');
+            let tableRows = '';
+            
+            if (smallCansBoxes > 0) {
+                tableRows += `
+                    <tr>
+                        <td>Small Cans (250ml)</td>
+                        <td>${smallCansPerMonth.toFixed(0)} cans</td>
+                        <td>€${smallCansPrice.toFixed(2)}</td>
+                        <td>Every ${smallCansFrequency} weeks</td>
+                        <td>€${smallCansMonthly.toFixed(2)}</td>
+                        <td>€${(smallCansMonthly * 12).toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+            
+            if (mediumCansBoxes > 0) {
+                tableRows += `
+                    <tr>
+                        <td>Medium Cans (500ml)</td>
+                        <td>${mediumCansPerMonth.toFixed(0)} cans</td>
+                        <td>€${mediumCansPrice.toFixed(2)}</td>
+                        <td>Every ${mediumCansFrequency} weeks</td>
+                        <td>€${mediumCansMonthly.toFixed(2)}</td>
+                        <td>€${(mediumCansMonthly * 12).toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+            
+            if (largeLitersWeek > 0) {
+                tableRows += `
+                    <tr>
+                        <td>Large Containers (${largeContainerSize}L)</td>
+                        <td>${largeContainersPerMonth.toFixed(1)} containers (${largeLitersPerMonth.toFixed(0)}L)</td>
+                        <td>€${largePricePerLiter.toFixed(2)}/L</td>
+                        <td>Weekly</td>
+                        <td>€${largeLitersMonthly.toFixed(2)}</td>
+                        <td>€${(largeLitersMonthly * 12).toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+            
+            if (totalMonthly > 0) {
+                tableRows += `
+                    <tr class="total-row">
+                        <td colspan="4"><strong>TOTAL (${selectedTier.years} Year Contract - ${selectedTier.discount}% Discount)</strong></td>
+                        <td><strong>€${totalMonthly.toFixed(2)}</strong></td>
+                        <td><strong>€${totalAnnual.toFixed(2)}</strong></td>
+                    </tr>
+                `;
+                
+                if (totalSavings > 0) {
+                    tableRows += `
+                        <tr class="savings-row">
+                            <td colspan="5"><strong>Annual Savings with Contract</strong></td>
+                            <td><strong>€${totalSavings.toFixed(2)}</strong></td>
+                        </tr>
+                    `;
+                }
+            }
+            
+            tbody.innerHTML = tableRows;
+        }
+        
+        function generatePDF() {
+            const clientName = document.getElementById('clientName').value || 'Valued Client';
+            const contactPerson = document.getElementById('contactPerson').value || '';
+            const email = document.getElementById('email').value || '';
+            const quoteDate = document.getElementById('quoteDate').value || new Date().toISOString().split('T')[0];
+            
+            // Create a new window with the quote content
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Unto Toscano - Quote for ${clientName}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+                        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid rgb(71, 114, 88); padding-bottom: 20px; }
+                        .header img { max-width: 200px; margin-bottom: 20px; }
+                        .header h1 { color: rgb(71, 114, 88); font-size: 2rem; margin: 0; }
+                        .header p { margin: 10px 0; font-size: 1.1rem; }
+                        .client-info { margin-bottom: 30px; background: #f9f9f9; padding: 20px; border: 1px solid #e0e0e0; }
+                        .quote-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        .quote-table th, .quote-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                        .quote-table th { background: rgb(71, 114, 88); color: white; }
+                        .total-row { background: #e8f0ec; font-weight: bold; }
+                        .savings-row { background: #fff8f6; color: rgb(255, 98, 54); font-weight: bold; }
+                        .contract-terms { margin-top: 30px; background: #f0f8f4; padding: 20px; border: 1px solid rgb(71, 114, 88); }
+                        .footer { margin-top: 40px; text-align: center; color: #666; border-top: 1px solid #e0e0e0; padding-top: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <img src="https://unto-toscano.com/cdn/shop/files/Artboard_3_4x_19f8842a-c1f2-4e49-a274-bd407461e8b8.png?v=1670781079&width=500" alt="Unto Toscano">
+                        <h1>COMMERCIAL QUOTE</h1>
+                        <p>Quote Date: ${new Date(quoteDate).toLocaleDateString()}</p>
+                    </div>
+                    
+                    <div class="client-info">
+                        <h3>Quote For:</h3>
+                        <p><strong>Client:</strong> ${clientName}</p>
+                        ${contactPerson ? `<p><strong>Contact:</strong> ${contactPerson}</p>` : ''}
+                        ${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}
+                    </div>
+                    
+                    ${document.querySelector('.quote-table').outerHTML}
+                    
+                    <div class="contract-terms">
+                        <h3>Exclusivity Agreement - ${selectedTier.years} Years</h3>
+                        <ul>
+                            <li><strong>${selectedTier.discount}% Discount</strong> on all orders</li>
+                            <li>Custom labeling with your logo included</li>
+                            <li>Dedicated account management</li>
+                            <li>Priority delivery scheduling</li>
+                            <li>Price protection against market fluctuations</li>
+                            <li>Minimum purchase commitment as outlined above</li>
+                            <li>90-day notice required for contract termination</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer">
+                        <p><strong>Unto Toscano</strong> | Premium Olive Oil</p>
+                        <p>This quote is valid for 30 days from the date above</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
+        }
+        
+        // Initialize the quote
+        updateQuote();
+    </script>
+</body>
+</html>
